@@ -1,7 +1,7 @@
 from game import Game
-from player import Player
+from viewer import Viewer
 
 game = Game()
-player = Player(game)
+viewer = Viewer(game)
 
 game.start_game()

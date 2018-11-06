@@ -1,6 +1,6 @@
 import pygame
 
-class Player():
+class Viewer():
     def __init__(self, game):
         self.game = game
         self.screen = pygame.display.set_mode((800, 600))

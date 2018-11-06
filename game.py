@@ -46,6 +46,8 @@ class Game:
             self.state = 1
 
     def started(self):
+        # Jeg har ikke lavet denne funktion
+        # return self.state > 0
         if self.state > 0:
             return True
         else:
