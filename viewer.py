@@ -36,7 +36,7 @@ class Viewer():
                     self.game.start_game()
 
         pressed = pygame.key.get_pressed()
-        self.game.tick(pygame, pressed)
+        self.game.tick(pressed)
 
         self.draw_game()
         pygame.display.flip()
