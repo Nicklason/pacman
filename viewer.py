@@ -1,16 +1,17 @@
+""" Viewer klasse """
+
 import pygame
 
-""" Viewer klasse """
 class Viewer():
-    """ Initialiserer viewer klasse """
     def __init__(self, game):
+        """ Initialiserer viewer klasse """
         self.game = game
 
         pygame.init()
         self.font = pygame.font.SysFont("monospace", 15)
 
-    """ Starter spillet """
     def start_clock(self):
+        """ Starter spillet """
         self.screen = pygame.display.set_mode((self.game.map.width * 16, self.game.map.height * 16))
         pygame.display.set_caption("Pacman")
         clock = pygame.time.Clock()
@@ -21,8 +22,8 @@ class Viewer():
             self.tick()
             clock.tick(60)
     
-    """ Kaldes hver iteration mens spillet køre """
     def tick(self):
+        """ Kaldes hver iteration mens spillet køre """
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
@@ -41,10 +42,10 @@ class Viewer():
         self.draw_game()
         pygame.display.flip()
     
-    """ Tegn alt der sker i spillet - kaldes efter game tick """
     def draw_game(self):
-        """ Offset linjer med -1 for at centerer dem """
+        """ Tegn alt der sker i spillet - kaldes efter game tick """
         def draw_wall_line(start, end):
+            """ Offset linjer med -1 for at centerer dem """
             startx, starty = start
             endx, endy = end
 

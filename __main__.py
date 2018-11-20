@@ -1,9 +1,9 @@
 """ Fil som starter programmet """
 
-from game import Game
-from viewer import Viewer
-
 if __name__ == "__main__":
+    from viewer import Viewer
+    from game import Game
+
     # Initialiser spil klasse
     GAME = Game()
     # Indlæs bane
