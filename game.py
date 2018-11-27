@@ -1,6 +1,7 @@
 """ Game klassen """
 
 from gamemap import Map
+from player import Player
 
 class Game:
     """ Initialiserer game klasse """
@@ -12,8 +13,21 @@ class Game:
         # Initialiserer map klasse
         self.map = Map(file_name)
 
+        # Find ud af hvor spilleren er
+        player_pos = self.map.get_player_pos()
+        if player_pos is not None:
+            self.player = Player(player_pos)
+
     def tick(self, pressed):
         """ Kaldes hver iteration i spil loopet """
+
+        if self.player:
+            # self.moveability(player)
+            # hvilke veje kan spilleren bevæge sig?
+            self.player.tick(pressed)
+        pass
+    
+    def moveability(self):
         pass
 
     def start_game(self):

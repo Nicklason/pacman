@@ -20,7 +20,7 @@ class Viewer():
 
         while self.running:
             self.tick()
-            clock.tick(60)
+            clock.tick(50)
     
     def tick(self):
         """ Kaldes hver iteration mens spillet køre """
@@ -31,7 +31,7 @@ class Viewer():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
                 self.game.toggle_pause()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                if self.game.started():
+                if self.game.state is 1:
                     self.game.end_game()
                 else:
                     self.game.start_game()
@@ -39,8 +39,9 @@ class Viewer():
         pressed = pygame.key.get_pressed()
         self.game.tick(pressed)
 
-        self.draw_game()
         pygame.display.flip()
+        self.draw_game()
+        
     
     def draw_game(self):
         """ Tegn alt der sker i spillet - kaldes efter game tick """
@@ -49,7 +50,7 @@ class Viewer():
             startx, starty = start
             endx, endy = end
 
-            pygame.draw.line(self.screen, (0, 0, 100), (startx-1, starty-1), (endx-1, endy-1))
+            pygame.draw.line(self.screen, (33, 33, 255), (startx-1, starty-1), (endx-1, endy-1))
 
         self.screen.fill((0, 0, 0))
         for x in range(0, self.game.map.width):
@@ -77,3 +78,5 @@ class Viewer():
                         draw_wall_line((x*16+16, y*16), (x*16+16, y*16+16))
                 elif value is 2:
                     pygame.draw.rect(self.screen, (255, 255, 0), pygame.Rect(x*16+7, y*16+7, 2, 2))
+
+        pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.game.player.pos[0], self.game.player.pos[1], 13, 13))

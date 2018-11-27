@@ -48,3 +48,32 @@ class Map():
         self.matrix = matrix
         self.width = image.get_width()
         self.height = image.get_height()
+
+    def get_player_pos(self):
+        """ Få spillerens start position """
+        for x in range(0, self.width):
+            for y in range(0, self.height):
+                if self.matrix[x][y] is 3:
+                    return [x, y]
+        
+        return None
+
+    def is_coin(self, coord):
+        """ Retunerer true hvis et point er ved koordinatet """
+        x, y = coord
+
+        return -1 < x < self.width and -1 < y < self.height and self.matrix[x][y] is 2
+    
+    def remove_coin(self, coord):
+        """ Fjerner et point fra banen ved at lave det om til en tom plads """
+        self.matrix[x][y] = 0
+
+    def is_walkable(self, coord):
+        """ Retunerer true hvis man kan gå ved koordinatet """
+        pass
+
+        # Spilleren er 16 pixels bred, tjek om der er plads til spilleren
+        
+        # Behøves kun at tjekke om der er en ting lige over, under, venstre og højre for spilleren
+
+        #return -1 > x > self.width and -1 > y > self.height and self.matrix[x][y] is not 1:
