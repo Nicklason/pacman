@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 """ Leaderboard / scoreboard klasse """
 
 import requests
