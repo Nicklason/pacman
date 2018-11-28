@@ -22,14 +22,20 @@ class Game:
         """ Kaldes hver iteration i spil loopet """
 
         if self.player:
-            # self.moveability(player)
-            # hvilke veje kan spilleren bevæge sig?
-            self.player.tick(pressed)
-        pass
-    
-    def moveability(self):
-        pass
+            x = self.player.pos[0]
+            y = self.player.pos[1]
 
+            self.player.above = self.map.grid_type(
+                [x, y-self.player.speed], True) is Map.WALL or self.map.grid_type([x+15, y-self.player.speed], True) is Map.WALL
+            self.player.below = self.map.grid_type(
+                [x, y+15+self.player.speed], True) is Map.WALL or self.map.grid_type([x+15, y+16], True) is 1
+            self.player.right = self.map.grid_type(
+                [x+15+self.player.speed, y], True) is Map.WALL or self.map.grid_type([x+15+self.player.speed, y+15], True) is Map.WALL
+            self.player.left = self.map.grid_type(
+                [x-self.player.speed, y], True) is Map.WALL or self.map.grid_type([x-self.player.speed, y+15], True) is Map.WALL
+
+            self.player.tick(pressed)
+    
     def start_game(self):
         """ Starter spillet """
         if self.state == 0:
