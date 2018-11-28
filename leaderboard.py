@@ -2,28 +2,42 @@
 
 import requests
 
-class Leaderboard:
+class Leaderboard():
     """ Initialisere klassen """
     def __init__(self, game):
+        self.host = "https://api.nicklas.io"
         self.game = game
-        self.host = 'https://api.nicklas.io'
 
     def get_scores(self):
         """ Får alle scores for et spil """
+        # Søg efter navnet på spillet
         params = dict(
             game=self.game
         )
 
-        r = requests.get(self.host, params=params)
-        return r.json()
+        # Lav kald til API
+        r = requests.get(url=self.host, params=params)
+        # Smid en fejl hvis kaldet ikke var succesfuldt
+        # r.raise_for_status()
+        if r.ok:
+            data = r.json()
+            return data
 
-    def new_score(self, user, score):
+        return None
+
+    def save_score(self, user, score):
         """ Laver en ny score for et spil """
+
         params = dict(
             game=self.game,
             user=user,
             score=score
         )
 
-        r = requests.post(self.host, params=params)
-        return r.json()
+        r = requests.post(url=self.host, params=params)
+
+        if r.ok:
+            data = r.json()
+            return data
+
+        return None
