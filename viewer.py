@@ -1,6 +1,7 @@
 """ Viewer klasse """
 
 import pygame
+from gamemap import Map
 
 class Viewer():
     def __init__(self, game):
@@ -31,7 +32,7 @@ class Viewer():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_p:
                 self.game.toggle_pause()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                if self.game.started():
+                if self.game.state is 1:
                     self.game.end_game()
                 else:
                     self.game.start_game()
@@ -39,8 +40,8 @@ class Viewer():
         pressed = pygame.key.get_pressed()
         self.game.tick(pressed)
 
-        self.draw_game()
         pygame.display.flip()
+        self.draw_game()
     
     def draw_game(self):
         """ Tegn alt der sker i spillet - kaldes efter game tick """
@@ -49,31 +50,28 @@ class Viewer():
             startx, starty = start
             endx, endy = end
 
-            pygame.draw.line(self.screen, (0, 0, 100), (startx-1, starty-1), (endx-1, endy-1))
+            pygame.draw.line(self.screen, (33, 33, 255), (startx-1, starty-1), (endx-1, endy-1))
 
         self.screen.fill((0, 0, 0))
         for x in range(0, self.game.map.width):
             for y in range(0, self.game.map.height):
                 value = self.game.map.matrix[x][y]
 
-                if value is 1:
+                if value is Map.WALL:
                     # Tjek om der er en mur til alle fire sider
-                    above = False if -1 < y-1 < self.game.map.height and self.game.map.matrix[x][y-1] is not 1 else True
-                    below = False if -1 < y+1 < self.game.map.height and self.game.map.matrix[x][y+1] is not 1 else True
-                    left = False if -1 < x-1 < self.game.map.width and self.game.map.matrix[x-1][y] is not 1 else True
-                    right = False if -1 < x+1 < self.game.map.width and self.game.map.matrix[x+1][y] is not 1 else True
-
-                    if above is False:
+                    if self.game.map.grid_type([x, y-1]) is not Map.WALL:
                         # Der er ikke en mur over
                         draw_wall_line((x*16, y*16), (x*16+16, y*16))
-                    if below is False:
+                    if self.game.map.grid_type([x, y+1]) is not Map.WALL:
                         # ...
                         draw_wall_line((x*16, y*16+16), (x*16+16, y*16+16))
-                    if left is False:
+                    if self.game.map.grid_type([x-1, y]) is not Map.WALL:
                         # ...
                         draw_wall_line((x*16, y*16), (x*16, y*16+16))
-                    if right is False:
+                    if self.game.map.grid_type([x+1, y]) is not Map.WALL:
                         # ...
                         draw_wall_line((x*16+16, y*16), (x*16+16, y*16+16))
-                elif value is 2:
+                elif value is Map.POINT:
                     pygame.draw.rect(self.screen, (255, 255, 0), pygame.Rect(x*16+7, y*16+7, 2, 2))
+
+        pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.game.player.pos[0], self.game.player.pos[1], 15, 15))
