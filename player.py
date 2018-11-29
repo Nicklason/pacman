@@ -36,17 +36,25 @@ class Player():
         elif self.left is False and self.heading is 3:
             self.direction = 3
 
+        # Tjek om spilleren står stille
+
         # Gå den vej
         if self.direction is 0 and self.above is False:
             # Spilleren bevæger sig mod nord, læg farten til y
             self.pos[1] -= self.speed
+            self.stopped = False
         elif self.direction is 1 and self.below is False:
             # Spilleren bevæger sig mod syd, træk farten fra y
             self.pos[1] += self.speed
+            self.stopped = False
         elif self.direction is 2 and self.right is False:
             # Spilleren bevæger sig mod øst, læg farten til i x
             self.pos[0] += self.speed
+            self.stopped = False
         elif self.direction is 3 and self.left is False:
             # Spilleren bevæger sig mod vest, træk farten fra i x
             self.pos[0] -= self.speed
+            self.stopped = False
+        else:
+            self.stopped = True
     
