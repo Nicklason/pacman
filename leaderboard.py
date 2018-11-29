@@ -34,7 +34,7 @@ class Leaderboard():
             score=score
         )
 
-        r = requests.post(url=self.host, json=params)
+        r = requests.post(url=self.host, json=json)
 
         if r.ok:
             data = r.json()
