@@ -60,6 +60,26 @@ class Map():
 
         self.matrix = matrix
     
+    def inside_grid(self, pos):
+        """ Find ud af om en position er helt inde i grid """
+        grid = self.get_grid(pos)
+        grid_pos = self.grid_to_pos(grid)
+
+        inside = self.pos_match(pos, grid_pos)
+        #print(inside)
+        return inside
+
+    def pos_match(self, pos1, pos2):
+        """ Tjek om positioner matcher """
+        return pos1[0] == pos2[0] and pos1[1] == pos2[1]
+    
+    def grid_to_pos(self, grid):
+        """ Konverter grid til position """
+        x = grid[0]*16
+        y = grid[1]*16
+
+        return [x,y]
+    
     def get_grid(self, pos, offset=0):
         """ Retunerer position i grid """
         x = math.floor((pos[0]+offset)/16)

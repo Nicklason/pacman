@@ -34,7 +34,16 @@ class Game:
             self.player.left = self.map.grid_type(
                 [x-self.player.speed, y], True) is Map.WALL or self.map.grid_type([x-self.player.speed, y+15], True) is Map.WALL
 
-            self.player.tick(pressed)
+            grid = self.map.get_grid(self.player.pos)
+
+            if self.map.grid_type(grid) is None and self.map.inside_grid(self.player.pos) is True:
+                # Teleporter spilleren til den modsatte side
+                if self.player.direction is 2 or self.player.direction is 3:
+                    self.player.pos[0] = self.player.pos[0]%(self.map.width*16)
+                else:
+                    self.player.pos[1] = self.player.pos[0]%(self.map.height*16)
+            else:
+                self.player.tick(pressed)
     
     def start_game(self):
         """ Starter spillet """
