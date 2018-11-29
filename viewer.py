@@ -25,7 +25,7 @@ class Viewer():
     def start_clock(self):
         """ Starter spillet """
         self.screen = pygame.display.set_mode((self.game.map.width * 16, self.game.map.height * 16))
-        pygame.display.set_caption("Pacman")
+        pygame.display.set_caption("Pycman")
         clock = pygame.time.Clock()
 
         self.running = True
