@@ -28,13 +28,13 @@ class Leaderboard():
     def save_score(self, user, score):
         """ Laver en ny score for et spil """
 
-        params = dict(
+        json = dict(
             game=self.game,
             user=user,
             score=score
         )
 
-        r = requests.post(url=self.host, params=params)
+        r = requests.post(url=self.host, json=params)
 
         if r.ok:
             data = r.json()
