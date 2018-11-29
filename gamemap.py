@@ -24,6 +24,8 @@ class Map():
         self.width = image.get_width()
         self.height = image.get_height()
 
+        points = 0
+
         matrix = []
         for x in range(0, self.width):
             matrix.append([])
@@ -39,6 +41,7 @@ class Map():
                 elif r is 255 and g is 255 and b is 0:
                     # Ost
                     matrix[x].append(Map.POINT)
+                    points += 1
                 elif r is 255 and g is 80 and b is 0:
                     # Spiller
                     matrix[x].append(Map.PLAYER)
@@ -59,6 +62,7 @@ class Map():
                     matrix[x].append(Map.EMPTY)
 
         self.matrix = matrix
+        self.total_points = points
     
     def inside_grid(self, pos):
         """ Find ud af om en position er helt inde i grid """

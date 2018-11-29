@@ -86,7 +86,6 @@ class Viewer():
                     pygame.draw.rect(self.screen, (255, 255, 0), pygame.Rect(x*16+7, y*16+7, 2, 2))      
         
         self.screen.blit(self.player_sprites(), (self.game.player.pos[0]+1, self.game.player.pos[1]+1))
-        #pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(self.game.player.pos[0], self.game.player.pos[1], 15, 15))
     
     def player_sprites(self):
         """ Retunere den sprite der skal bruges, afhænger af tiden og spillerens retning """

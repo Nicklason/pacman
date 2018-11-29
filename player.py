@@ -10,12 +10,9 @@ class Player():
         self.direction = 3 # Går mod vest
         self.heading = 3 # Vil prøve at gå mod vest når man kan
         self.stopped = False  # Hvis spilleren er stødt på en mur
-        self.speed = 1
+        self.speed = 1 # Spillet vil ikke virke ordenligt hvis man ændre på farten
 
     def tick(self, pressed):
-        # Hvis spilleren er midt inde i en grid, så kan han bevæge sig alle retninger
-        # Bloker bevægelser så spilleren ikke kan bevæge sig ud af grid som han befinder sig i
-
         # Hvilken vej som spilleren vil gå
         if pressed[pygame.K_UP]:
             self.heading = 0
@@ -35,8 +32,6 @@ class Player():
             self.direction = 2
         elif self.left is False and self.heading is 3:
             self.direction = 3
-
-        # Tjek om spilleren står stille
 
         # Gå den vej
         if self.direction is 0 and self.above is False:
