@@ -8,6 +8,7 @@ class Game:
     def __init__(self):
         self.state = 0
         self.score = 0
+        self.removed_points = 0 # Hvor mange point som er blevet samlet op af spilleren
 
     def load_map(self, file_name):
         """ Indlæser bane """
@@ -40,9 +41,10 @@ class Game:
                 else:
                     self.player.pos[1] = self.player.pos[0]%(self.map.height*16)
             elif self.map.grid_type(grid) is Map.POINT and self.map.inside_grid(self.player.pos) is True:
-                self.score += 1
+                self.score += 10
+                self.removed_points += 1
                 self.map.matrix[grid[0]][grid[1]] = Map.EMPTY
-                if self.score == self.map.total_points:
+                if self.removed_points == self.map.total_points:
                     self.state = 3
             else:
                 self.player.tick(pressed)

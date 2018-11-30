@@ -24,7 +24,7 @@ class Viewer():
 
     def start_clock(self):
         """ Starter spillet """
-        self.screen = pygame.display.set_mode((self.game.map.width * 16, self.game.map.height * 16))
+        self.screen = pygame.display.set_mode((self.game.map.width * 16, self.game.map.height * 16 + 8))
         pygame.display.set_caption("Pycman")
         clock = pygame.time.Clock()
 
@@ -70,22 +70,24 @@ class Viewer():
 
                 if value is Map.WALL:
                     # Tjek om der er en mur til alle fire sider
-                    if self.game.map.grid_type([x, y-1]) is not Map.WALL:
+                    if self.game.map.grid_type([x, y-1]) not in (Map.WALL, None):
                         # Der er ikke en mur over
                         draw_wall_line((x*16, y*16), (x*16+16, y*16))
-                    if self.game.map.grid_type([x, y+1]) is not Map.WALL:
+                    if self.game.map.grid_type([x, y+1]) not in (Map.WALL, None):
                         # ...
                         draw_wall_line((x*16, y*16+16), (x*16+16, y*16+16))
-                    if self.game.map.grid_type([x-1, y]) is not Map.WALL:
+                    if self.game.map.grid_type([x-1, y]) not in (Map.WALL, None):
                         # ...
                         draw_wall_line((x*16, y*16), (x*16, y*16+16))
-                    if self.game.map.grid_type([x+1, y]) is not Map.WALL:
+                    if self.game.map.grid_type([x+1, y]) not in (Map.WALL, None):
                         # ...
-                        draw_wall_line((x*16+16, y*16), (x*16+16, y*16+16))
+                        draw_wall_line((x*16+16, y*16), (x*16+16, y*16+16)) is False
                 elif value is Map.POINT:
                     pygame.draw.rect(self.screen, (255, 255, 0), pygame.Rect(x*16+7, y*16+7, 2, 2))      
         
         self.screen.blit(self.player_sprites(), (self.game.player.pos[0]+1, self.game.player.pos[1]+1))
+        scoretext = self.font.render("{0}".format(self.game.score), 1, (255, 255, 255))
+        self.screen.blit(scoretext, (6, self.game.map.height*16-13))
     
     def player_sprites(self):
         """ Retunere den sprite der skal bruges, afhænger af tiden og spillerens retning """
@@ -113,11 +115,9 @@ class Viewer():
         index = 0
         if cycle is 0:
             index = 1
-        elif cycle is 1:
+        elif cycle in (1,3):
             index = 2
         elif cycle is 2:
             index = 0
-        elif cycle is 3:
-            index = 2
 
         return sprites[index]
