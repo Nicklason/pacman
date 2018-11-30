@@ -7,6 +7,8 @@ class Game:
     """ Initialiserer game klasse """
     def __init__(self):
         self.state = 0
+        self.score = 0
+        self.removed_points = 0 # Hvor mange point som er blevet samlet op af spilleren
 
     def load_map(self, file_name):
         """ Indlæser bane """
@@ -25,14 +27,10 @@ class Game:
             x = self.player.pos[0]
             y = self.player.pos[1]
 
-            self.player.above = self.map.grid_type(
-                [x, y-self.player.speed], True) is Map.WALL or self.map.grid_type([x+15, y-self.player.speed], True) is Map.WALL
-            self.player.below = self.map.grid_type(
-                [x, y+15+self.player.speed], True) is Map.WALL or self.map.grid_type([x+15, y+16], True) is 1
-            self.player.right = self.map.grid_type(
-                [x+15+self.player.speed, y], True) is Map.WALL or self.map.grid_type([x+15+self.player.speed, y+15], True) is Map.WALL
-            self.player.left = self.map.grid_type(
-                [x-self.player.speed, y], True) is Map.WALL or self.map.grid_type([x-self.player.speed, y+15], True) is Map.WALL
+            self.player.above = self.map.grid_type([x, y-self.player.speed], True) is Map.WALL or self.map.grid_type([x+15, y-self.player.speed], True) is Map.WALL
+            self.player.below = self.map.grid_type([x, y+15+self.player.speed], True) is Map.WALL or self.map.grid_type([x+15, y+16], True) is 1
+            self.player.right = self.map.grid_type([x+15+self.player.speed, y], True) is Map.WALL or self.map.grid_type([x+15+self.player.speed, y+15], True) is Map.WALL
+            self.player.left = self.map.grid_type([x-self.player.speed, y], True) is Map.WALL or self.map.grid_type([x-self.player.speed, y+15], True) is Map.WALL
 
             grid = self.map.get_grid(self.player.pos)
 
@@ -42,6 +40,12 @@ class Game:
                     self.player.pos[0] = self.player.pos[0]%(self.map.width*16)
                 else:
                     self.player.pos[1] = self.player.pos[0]%(self.map.height*16)
+            elif self.map.grid_type(grid) is Map.POINT and self.map.inside_grid(self.player.pos) is True:
+                self.score += 10
+                self.removed_points += 1
+                self.map.matrix[grid[0]][grid[1]] = Map.EMPTY
+                if self.removed_points == self.map.total_points:
+                    self.state = 3
             else:
                 self.player.tick(pressed)
     
