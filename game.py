@@ -8,7 +8,6 @@ class Game:
     def __init__(self):
         self.state = 0
         self.score = 0
-        self.removed_points = 0 # Hvor mange point som er blevet samlet op af spilleren
 
     def load_map(self, file_name):
         """ Indlæser bane """
@@ -36,32 +35,41 @@ class Game:
 
             if self.map.grid_type(grid) is None and self.map.inside_grid(self.player.pos) is True:
                 # Teleporter spilleren til den modsatte side
-                if self.player.direction is 2 or self.player.direction is 3:
+                if self.player.direction in (2,3):
                     self.player.pos[0] = self.player.pos[0]%(self.map.width*16)
                 else:
                     self.player.pos[1] = self.player.pos[0]%(self.map.height*16)
             elif self.map.grid_type(grid) is Map.POINT and self.map.inside_grid(self.player.pos) is True:
+                # Hvis spilleren står inde i et grid med et point, og spilleren er helt inde i grid, så fjern
+                # point fra banen og incrementer scoren 
                 self.score += 10
-                self.removed_points += 1
-                self.map.matrix[grid[0]][grid[1]] = Map.EMPTY
-                if self.removed_points == self.map.total_points:
-                    self.state = 3
+                self.map.remove_point(grid)
+                if self.map.removed_points == self.map.total_points:
+                    # Der er ikke flere point i banen, start ny bane
+                    self.load_map("default.png")
             else:
                 self.player.tick(pressed)
     
     def start_game(self):
         """ Starter spillet """
         if self.state == 0:
+            # Starter et nyt spil
             self.state = 1
+        elif self.state == 3:
+            # Spillet er stoppet, starter et nyt
+            self.state = 1
+            self.score = 0
+            self.load_map("default.png")
 
     def end_game(self):
         """ Stopper spillet """
-        if self.state > 0:
-            self.state = 0
+        self.state = 3
 
     def toggle_pause(self):
         """ Pauser spillet """
         if self.state == 1:
+            # Spillet er i gang, pauser det
             self.state = 2
-        else:
+        elif self.state == 2:
+            # Spillet er pauset, starter det
             self.state = 1

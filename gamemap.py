@@ -15,7 +15,9 @@ class Map():
 
     """ Initialiserer map klasse """
     def __init__(self, file_name):
-        image = pygame.image.load(file_name)
+        image = pygame.image.load("maps/{0}".format(file_name))
+
+        self.removed_points = 0
 
         self.construct(image)
 
@@ -61,8 +63,8 @@ class Map():
                     # Intet match = tomt
                     matrix[x].append(Map.EMPTY)
 
-        self.matrix = matrix
         self.total_points = points
+        self.matrix = matrix
     
     def inside_grid(self, pos):
         """ Find ud af om en position er helt inde i grid """
@@ -70,7 +72,6 @@ class Map():
         grid_pos = self.grid_to_pos(grid)
 
         inside = self.pos_match(pos, grid_pos)
-        #print(inside)
         return inside
 
     def pos_match(self, pos1, pos2):
@@ -115,6 +116,7 @@ class Map():
         
         return None
 
-    def remove_point(self, coord):
+    def remove_point(self, grid):
         """ Fjerner et point fra banen ved at lave det om til en tom plads """
-        self.matrix[x][y] = Map.EMPTY
+        self.matrix[grid[0]][grid[1]] = Map.EMPTY
+        self.removed_points += 1
