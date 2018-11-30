@@ -49,7 +49,9 @@ class Viewer():
                     self.game.start_game()
 
         pressed = pygame.key.get_pressed()
-        self.game.tick(pressed)
+        if self.game.state is 1:
+            # Spillet er i gang
+            self.game.tick(pressed)
 
         pygame.display.flip()
         self.draw_game()
@@ -64,30 +66,52 @@ class Viewer():
             pygame.draw.line(self.screen, (33, 33, 255), (startx-1, starty-1), (endx-1, endy-1))
 
         self.screen.fill((0, 0, 0))
-        for x in range(0, self.game.map.width):
-            for y in range(0, self.game.map.height):
-                value = self.game.map.matrix[x][y]
 
-                if value is Map.WALL:
-                    # Tjek om der er en mur til alle fire sider
-                    if self.game.map.grid_type([x, y-1]) not in (Map.WALL, None):
-                        # Der er ikke en mur over
-                        draw_wall_line((x*16, y*16), (x*16+16, y*16))
-                    if self.game.map.grid_type([x, y+1]) not in (Map.WALL, None):
-                        # ...
-                        draw_wall_line((x*16, y*16+16), (x*16+16, y*16+16))
-                    if self.game.map.grid_type([x-1, y]) not in (Map.WALL, None):
-                        # ...
-                        draw_wall_line((x*16, y*16), (x*16, y*16+16))
-                    if self.game.map.grid_type([x+1, y]) not in (Map.WALL, None):
-                        # ...
-                        draw_wall_line((x*16+16, y*16), (x*16+16, y*16+16)) is False
-                elif value is Map.POINT:
-                    pygame.draw.rect(self.screen, (255, 255, 0), pygame.Rect(x*16+7, y*16+7, 2, 2))      
-        
-        self.screen.blit(self.player_sprites(), (self.game.player.pos[0]+1, self.game.player.pos[1]+1))
-        scoretext = self.font.render("{0}".format(self.game.score), 1, (255, 255, 255))
-        self.screen.blit(scoretext, (6, self.game.map.height*16-13))
+        if self.game.state is 0:
+            # Spillet er ikke startet
+            starttext = self.font.render("Tryk på ESC for at starte", 1, (255,255,255))
+
+            w, h = pygame.display.get_surface().get_size()
+            textrect = starttext.get_rect(center=(w/2, h/2))
+            self.screen.blit(starttext, textrect)
+        elif self.game.state is 1:
+            # Spillet er i gang, tegn hele banen
+            for x in range(0, self.game.map.width):
+                for y in range(0, self.game.map.height):
+                    value = self.game.map.matrix[x][y]
+
+                    if value is Map.WALL:
+                        # Tjek om der er en mur til alle fire sider
+                        if self.game.map.grid_type([x, y-1]) not in (Map.WALL, None):
+                            # Der er ikke en mur over
+                            draw_wall_line((x*16, y*16), (x*16+16, y*16))
+                        if self.game.map.grid_type([x, y+1]) not in (Map.WALL, None):
+                            # ...
+                            draw_wall_line((x*16, y*16+16), (x*16+16, y*16+16))
+                        if self.game.map.grid_type([x-1, y]) not in (Map.WALL, None):
+                            # ...
+                            draw_wall_line((x*16, y*16), (x*16, y*16+16))
+                        if self.game.map.grid_type([x+1, y]) not in (Map.WALL, None):
+                            # ...
+                            draw_wall_line((x*16+16, y*16), (x*16+16, y*16+16)) is False
+                    elif value is Map.POINT:
+                        pygame.draw.rect(self.screen, (255, 255, 0), pygame.Rect(x*16+7, y*16+7, 2, 2))      
+            
+            self.screen.blit(self.player_sprites(), (self.game.player.pos[0]+1, self.game.player.pos[1]+1))
+
+            scoretext = self.font.render("{0}".format(self.game.score), 1, (255, 255, 255))
+            self.screen.blit(scoretext, (6, self.game.map.height*16-13))
+        elif self.game.state is 2:
+            # Spillet er pauset
+            pausetext = self.font.render("PAUSED", 1, (255,255,255))
+
+            w, h = pygame.display.get_surface().get_size()
+            textrect = pausetext.get_rect(center=(w/2, h/2))
+            self.screen.blit(pausetext, textrect)
+        elif self.game.state is 3:
+            # Spillet er færdigt
+            scoretext = self.font.render("Du fik {0} point".format(self.game.score), 1, (255, 255, 255))
+            self.screen.blit(scoretext, (6, 6))
     
     def player_sprites(self):
         """ Retunere den sprite der skal bruges, afhænger af tiden og spillerens retning """
