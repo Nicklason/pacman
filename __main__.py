@@ -10,6 +10,6 @@ if __name__ == "__main__":
     GAME.load_map('default.png')
     # Initialiser viewer klasse
     VIEWER = Viewer(GAME)
-
+    
     # Start loop
     VIEWER.start_clock()

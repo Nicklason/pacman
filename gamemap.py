@@ -66,31 +66,48 @@ class Map():
         self.total_points = points
         self.matrix = matrix
     
-    def inside_grid(self, pos):
+    @classmethod
+    def inside_grid(cls, pos):
         """ Find ud af om en position er helt inde i grid """
-        grid = self.get_grid(pos)
-        grid_pos = self.grid_to_pos(grid)
+        grid = cls.get_grid(pos)
+        grid_pos = cls.grid_to_pos(grid)
 
-        inside = self.pos_match(pos, grid_pos)
+        inside = cls.pos_match(pos, grid_pos)
         return inside
 
-    def pos_match(self, pos1, pos2):
+    @staticmethod
+    def pos_match(pos1, pos2):
         """ Tjek om positioner matcher """
         return pos1[0] == pos2[0] and pos1[1] == pos2[1]
     
-    def grid_to_pos(self, grid):
+    @classmethod
+    def grid_match(cls, grid1, grid2, convert=False):
+        if convert is True:
+            grid1 = cls.get_grid(grid1)
+            grid2 = cls.get_grid(grid2)
+        
+        return grid1[0] == grid2[0] and grid1[1] == grid2[1]
+    
+    @staticmethod
+    def grid_to_pos(grid):
         """ Konverter grid til position """
         x = grid[0]*16
         y = grid[1]*16
 
         return [x,y]
     
-    def get_grid(self, pos, offset=0):
+    @staticmethod
+    def get_grid(pos, offset=0):
         """ Retunerer position i grid """
         x = math.floor((pos[0]+offset)/16)
         y = math.floor((pos[1]+offset)/16)
 
         return [x, y]
+
+    @staticmethod
+    def axis_aligned(pos1, pos2):
+        """ Retunere true hvis enten x eller y aksen er ens """
+        return pos1[0]-pos2[0] == 0 or pos1[1]-pos2[1] == 0
     
     def grid_type(self, pos, convert=False):
         """ Retunerer grid type """
@@ -115,8 +132,35 @@ class Map():
                     return [x, y]
         
         return None
+    
+    def get_ghost_pos(self):
+        """ Find spøgelserne """
+        ghosts = []
+        for x in range(0, self.width):
+            for y in range(0, self.height):
+                if self.matrix[x][y] == Map.RED_GHOST:
+                    ghosts.append(([x, y], Map.RED_GHOST))
+                """ elif self.matrix[x][y] == Map.CYAN_GHOST:
+                    ghosts.append(([x,y], Map.CYAN_GHOST))
+                elif self.matrix[x][y] == Map.PINK_GHOST:
+                    ghosts.append(([x,y], Map.PINK_GHOST))
+                elif self.matrix[x][y] == Map.ORANGE_GHOST:
+                    ghosts.append(([x,y], Map.ORANGE_GHOST)) """
+        
+        return ghosts
 
     def remove_point(self, grid):
         """ Fjerner et point fra banen ved at lave det om til en tom plads """
         self.matrix[grid[0]][grid[1]] = Map.EMPTY
         self.removed_points += 1
+    
+    def pathfinding_matrix(self):
+        """ Laver en matrice som kan bruges til pathfinding algorithmen """
+        matrix = []
+        for x in range(0, self.width):
+            matrix.append([])
+            for y in range(0, self.height):
+                grid_type = self.grid_type([x,y])
+                matrix[x].append(1 if grid_type == Map.WALL else 0)
+        
+        return matrix

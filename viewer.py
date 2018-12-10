@@ -99,6 +99,9 @@ class Viewer():
             
             self.screen.blit(self.player_sprites(), (self.game.player.pos[0]+1, self.game.player.pos[1]+1))
 
+            for ghost in self.game.ghosts:
+                pygame.draw.rect(self.screen, (0, 255, 0), pygame.Rect(ghost.pos[0], ghost.pos[1], 15, 15))
+
             scoretext = self.font.render("{0}".format(self.game.score), 1, (255, 255, 255))
             self.screen.blit(scoretext, (6, self.game.map.height*16-13))
         elif self.game.state is 2:
